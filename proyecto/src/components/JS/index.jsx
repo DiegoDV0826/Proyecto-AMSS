@@ -1,9 +1,20 @@
 import React from 'react'
+import {
+    Jumbotron,
+    Button,
+    Row,
+    Col,
+    Container
+} from 'react-bootstrap'
 
 export default function index() {
     return (
-        <div>
-            <h1>Holatacos</h1>
-        </div>
+        <>
+            <Jumbotron fluid>
+                <Row className="justify-content-center">
+                    <h1>PYMEctate</h1>
+                </Row>
+            </Jumbotron>
+        </>
     )
 }
