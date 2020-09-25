@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import './App.css';
 import Index from "./components/JS/index";
+import Login from "./components/JS/login"
+import Register from "./components/JS/register"
 import { 
   Nav,
   Navbar,
@@ -36,21 +38,24 @@ function App() {
     </>*/
 
     <>
-    <Router>
+    <Router basename="/">
     <Navbar bg="dark" variant="dark">
-      <Navbar.Brand href="/">PYMEctate</Navbar.Brand>
+      <Navbar.Brand href="/home">PYMEctate</Navbar.Brand>
       <Nav className="mr-auto">
-        <Nav.Link href="/">Inicio</Nav.Link>
+        <Nav.Link href="/home">Inicio</Nav.Link>
       </Nav>
       <ButtonGroup>
-        <Button variant="outline-info">Crear una cuenta</Button>
-        <Button variant="info">Iniciar sesión</Button>
+        <Button href="/register" variant="outline-info">Crear una cuenta</Button>
+        <Button href="/login" variant="info">Iniciar sesión</Button>
       </ButtonGroup>
     </Navbar>
       <Switch>
-        <Route path="/" component={Index}/>
-        <Route path="/iniciar-sesion" />
-        <Route path="/crear-cuenta" />
+        <Route exact path="/">
+          <Redirect to="/home"/>
+        </Route>
+        <Route path="/home" component={Index}/>
+        <Route path="/login" component={Login}/>
+        <Route path="/register" component={Register} />
       </Switch> 
     </Router>
     </>

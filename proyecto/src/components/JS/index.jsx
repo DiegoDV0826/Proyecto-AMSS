@@ -7,7 +7,7 @@ import {
     Container
 } from 'react-bootstrap'
 
-export default function index() {
+export default function Index() {
     return (
         <>
             <Jumbotron fluid>
