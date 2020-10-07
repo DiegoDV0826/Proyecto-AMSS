@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
     Button,
     Row,
@@ -7,8 +7,14 @@ import {
     Card,
     Form
 } from 'react-bootstrap'
+import 'firebase/auth';
+import { useFirebaseApp } from 'reactfire'
 
 export default function Login() {
+    const [email, setEmail] = useState('');
+    const [passwd, setPasswd] = useState('');
+    const firebase = useFirebaseApp();
+
     return (
         <>
         <Container className="align-items-center">
@@ -23,7 +29,9 @@ export default function Login() {
                                 className="mb-2 mr-sm-2"
                                 id="inlineFormInputName2"
                                 placeholder="Correo Electrónico"
+                                type="email"
                                 size="md"
+                                
                             />
                             {/*Form.Label>Ingrese contraseña</Form.Label>*/}
                             <Form.Control
@@ -32,9 +40,13 @@ export default function Login() {
                                 aria-describedby="passwordHelpBlock"
                                 placeholder="Contraseña"
                                 size="md"
+                                
                             />
                             <br/>
-                            <Button size="lg" variant="info" block>Listo</Button>
+                            <Button 
+                                size="lg" 
+                                variant="info" 
+                                block>Listo</Button>
                             </Form>
                         </Card.Body>
                     </Card>

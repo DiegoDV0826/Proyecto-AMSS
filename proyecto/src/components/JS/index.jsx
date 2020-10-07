@@ -12,7 +12,7 @@ export default function Index() {
         <>
             <Jumbotron fluid>
                 <Row className="justify-content-center">
-                    <h1>PYMEctate</h1>
+                    <h1>PYMEcta</h1>
                 </Row>
             </Jumbotron>
         </>
