@@ -13,15 +13,17 @@ import { useFirebaseApp, useDatabase } from 'reactfire'
 //import firebase from '../FB/firebaseConfig.js'
 
 export default function Register() {
+    
     const [email, setEmail] = useState('');
     const [passwd, setPasswd] = useState('');
     const [nomNegocio, setNomNegocio] = useState('');
     const firebase = useFirebaseApp();
     
     let handleSubmit = e =>{
-         firebase.database().ref().child('nomNegocio').push(nomNegocio)
-         firebase.database().ref().child('email').push(email)
+         let aux = {correo:email, nombre:nomNegocio};
+         firebase.database().ref().child('cuentaEmpresa').push(aux);
          firebase.auth().createUserWithEmailAndPassword(email,passwd);
+         window.location.reload(false);
     }
 
     return (
