@@ -66,6 +66,7 @@ function App() {
         <Route path="/login" component={Login}/>
         <Route path="/register" component={Register} />
         <Route path="/profile" component={Profile} />
+        {/*<Route path="/search" component={}/>*/}
       </Switch> 
     </Router>
     </>
