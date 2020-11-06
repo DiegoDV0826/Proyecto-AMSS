@@ -18,33 +18,18 @@ import {
   Button
  } from "react-bootstrap";
 import {
-  useFirebaseApp
+  useFirebaseApp,
+  AuthCheck,
+  useUser
 } from 'reactfire';
-
+import {AuthProvider} from "./components/JS/Auth";
+import PrivateRoute from "./components/JS/PrivateRoute"
 function App() {
-
+  const user=useUser();
   const fb = useFirebaseApp();
-  console.log(fb);
-
   return (
-    /*<>
-    <Router>
-      <div>
-        <ol>
-          <li>
-            <Link to="/index">index</Link>
-          </li>
-        </ol>
-      </div>
-
-      <Switch>
-        <Route path="/index" component={Index}/>
-      </Switch>
-    </Router>
-    
-    </>*/
-
     <>
+    <AuthProvider>
     <Router basename="/">
     <Navbar bg="dark" variant="dark">
       <Navbar.Brand href="/home">PYMEcta</Navbar.Brand>
@@ -53,10 +38,17 @@ function App() {
         <Nav.Link>Buscar</Nav.Link>
         <Nav.Link href="/profile">Mi perfil</Nav.Link>
       </Nav>
-      <ButtonGroup>
-        <Button href="/register" variant="outline-info">Crear una cuenta</Button>
-        <Button href="/login" variant="info">Iniciar sesión</Button>
-      </ButtonGroup>
+      <AuthCheck fallback={
+        <ButtonGroup>
+          <Button href="/register" variant="outline-info">Crear una cuenta</Button>
+          <Button href="/login" variant="info">Iniciar sesión</Button>
+        </ButtonGroup>
+      }>
+        <ButtonGroup>
+          <Button onClick = {() => fb.auth().signOut()}>Terminar Sesion</Button>
+        </ButtonGroup>
+      </AuthCheck>
+      
     </Navbar>
       <Switch>
         <Route exact path="/">
@@ -65,10 +57,11 @@ function App() {
         <Route path="/home" component={Index}/>
         <Route path="/login" component={Login}/>
         <Route path="/register" component={Register} />
-        <Route path="/profile" component={Profile} />
+        <PrivateRoute path="/profile" component={Profile} />
         {/*<Route path="/search" component={}/>*/}
       </Switch> 
     </Router>
+    </AuthProvider>
     </>
   );
 }

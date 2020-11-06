@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
     Button,
     Row,
     Col,
     Container,
     Card,
-    Form
+    Form,
+    modal
 } from 'react-bootstrap';
 import 'firebase/auth';
 import 'firebase/database'
@@ -13,18 +14,26 @@ import { useFirebaseApp, useDatabase } from 'reactfire'
 //import firebase from '../FB/firebaseConfig.js'
 
 export default function Register() {
-    
     const [email, setEmail] = useState('');
     const [passwd, setPasswd] = useState('');
-    const [nomNegocio, setNomNegocio] = useState('');
+    //const [nomNegocio, setNomNegocio] = useState('');
     const firebase = useFirebaseApp();
     
-    let handleSubmit = e =>{
-         let aux = {correo:email, nombre:nomNegocio};
-         firebase.database().ref().child('cuentaEmpresa').push(aux);
-         firebase.auth().createUserWithEmailAndPassword(email,passwd);
-         window.location.reload(false);
-    }
+    const handleSubmit = useCallback(async ev =>{
+         //let aux = {correo:email, nombre:nomNegocio};
+         //firebase.database().ref().child('cuentaEmpresa').push(aux);
+         ev.preventDefault();
+         try{
+            await firebase
+            .auth()
+            .createUserWithEmailAndPassword(email,passwd);
+         } catch(error){
+             alert(error);
+         }
+         //window.location.reload(false);
+         setEmail("");
+         setPasswd("");
+    })
 
     return (
         <>
@@ -40,17 +49,19 @@ export default function Register() {
                                 className="mb-2 mr-sm-2"
                                 id="inlineFormInputName2"
                                 placeholder="Correo Electrónico"
+                                type="email"
                                 size="md"
+                                value = {email}
                                 onChange={(ev)=>setEmail(ev.target.value)}
                             />
-                            <Form.Control
+                            {/*<Form.Control
                                 className="mb-2 mr-sm-2"
                                 id="inlineFormInputName2"
                                 placeholder="Nombre de negocio"
                                 size="md"   
                                 onChange={(ev)=>setNomNegocio(ev.target.value)}
                             />
-                            
+                            */}
                             {/*Form.Label>Ingrese contraseña</Form.Label>*/}
                             <Form.Control
                                 type="password"
@@ -58,6 +69,7 @@ export default function Register() {
                                 aria-describedby="passwordHelpBlock"
                                 placeholder="Contraseña"
                                 size="md"
+                                value = {passwd}
                                 onChange={(ev)=>setPasswd(ev.target.value)}
                             />
                             <br/>

@@ -8,6 +8,12 @@ import {
 } from 'reactfire'
 import firebaseConfig from './components/FB/firebaseConfig.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {
+  useFirebaseApp,
+  AuthCheck,
+  useUser
+} from 'reactfire';
+const FirebaseContext = React.createContext(null);
 
 ReactDOM.render(
   <FirebaseAppProvider firebaseConfig={firebaseConfig}>
