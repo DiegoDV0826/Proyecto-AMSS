@@ -1,27 +1,29 @@
 import React, { useContext } from 'react'
 import {
     Jumbotron,
-    Button,
-    Row,
-    Col,
-    Container
+    Row
 } from 'react-bootstrap'
 import {
-    useFirebaseApp,
-    AuthCheck
+    AuthCheck,
+    useFirebaseApp
   } from 'reactfire';
 import { AuthContext } from "./Auth";
 
 export default function Index() {
-    const user = useContext(AuthContext);
+    const fb = useFirebaseApp();
+    const user = fb.auth().currentUser;
+    console.log(user)
+    const checkUser = () => {
+        if(!(user === null)){
+            return <h1>, {user.displayName}</h1>
+        }
+    }
     return (
         <>
             <Jumbotron fluid>
                 <Row className="justify-content-center">
-                    <AuthCheck fallback={<h1>PYMEcta</h1>}>
-                        <h1>Bienvenido</h1>
-                    </AuthCheck>
-                    
+                    <h1>Bienvenido a PYMEcta</h1>
+                    {checkUser()}
                 </Row>
             </Jumbotron>
         </>

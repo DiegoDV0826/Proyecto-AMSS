@@ -8,20 +8,21 @@ import {
     Form
 } from 'react-bootstrap'
 import 'firebase/auth';
-import { withRouter, Redirect } from "react-router";
+import { Redirect } from "react-router";
 import { useFirebaseApp } from 'reactfire'
 import { AuthContext } from "./Auth"
+import * as firebase from 'firebase';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [passwd, setPasswd] = useState('');
-    const firebase = useFirebaseApp();
+    const fb = useFirebaseApp();
 
     const handleSubmit = useCallback(
         async(ev) => {
             ev.preventDefault();
             try{
-                await firebase
+                await fb
                 .auth()
                 .signInWithEmailAndPassword(email, passwd);
             } catch(error){
@@ -31,6 +32,15 @@ export default function Login() {
             setPasswd("");
         }
     )
+    
+    const googleAuth = () => {
+        fb.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        .then((res) => {
+            console.log(res.user);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 
     const { currentUser } = useContext(AuthContext);
     
@@ -73,6 +83,11 @@ export default function Login() {
                                 variant="info"
                                 type="submit" 
                                 block>Listo</Button>
+                            <Button 
+                                size="lg" 
+                                variant="danger"
+                                onClick={googleAuth}
+                                block>Entrar con Google</Button>
                             </Form>
                         </Card.Body>
                     </Card>

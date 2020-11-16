@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import {
     Button,
     Row,
@@ -10,13 +10,15 @@ import {
 } from 'react-bootstrap';
 import 'firebase/auth';
 import 'firebase/database'
+import { Redirect } from "react-router";
+import { AuthContext } from "./Auth"
 import { useFirebaseApp, useDatabase } from 'reactfire'
 //import firebase from '../FB/firebaseConfig.js'
 
 export default function Register() {
     const [email, setEmail] = useState('');
     const [passwd, setPasswd] = useState('');
-    //const [nomNegocio, setNomNegocio] = useState('');
+    const [nomNegocio, setNomNegocio] = useState('');
     const firebase = useFirebaseApp();
     
     const handleSubmit = useCallback(async ev =>{
@@ -27,14 +29,22 @@ export default function Register() {
             await firebase
             .auth()
             .createUserWithEmailAndPassword(email,passwd);
+            firebase.auth().currentUser.updateProfile({
+                displayName: nomNegocio
+            });
          } catch(error){
              alert(error);
          }
          //window.location.reload(false);
          setEmail("");
          setPasswd("");
+         setNomNegocio("");
     })
-
+    const { currentUser } = useContext(AuthContext);
+    
+    if (currentUser){
+        return <Redirect to="/"/>
+    }
     return (
         <>
         <Container className="align-items-center">
@@ -54,14 +64,15 @@ export default function Register() {
                                 value = {email}
                                 onChange={(ev)=>setEmail(ev.target.value)}
                             />
-                            {/*<Form.Control
+                            <Form.Control
                                 className="mb-2 mr-sm-2"
                                 id="inlineFormInputName2"
                                 placeholder="Nombre de negocio"
-                                size="md"   
+                                size="md"
+                                value = {nomNegocio}   
                                 onChange={(ev)=>setNomNegocio(ev.target.value)}
                             />
-                            */}
+                            
                             {/*Form.Label>Ingrese contraseña</Form.Label>*/}
                             <Form.Control
                                 type="password"

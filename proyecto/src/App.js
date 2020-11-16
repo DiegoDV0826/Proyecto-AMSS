@@ -3,14 +3,13 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect
 } from "react-router-dom";
-import './App.css';
 import Index from "./components/JS/index";
 import Login from "./components/JS/login";
 import Register from "./components/JS/register";
 import Profile from "./components/JS/perfil";
+import Chat from "./components/JS/chat";
 import { 
   Nav,
   Navbar,
@@ -19,13 +18,12 @@ import {
  } from "react-bootstrap";
 import {
   useFirebaseApp,
-  AuthCheck,
-  useUser
+  AuthCheck
 } from 'reactfire';
 import {AuthProvider} from "./components/JS/Auth";
 import PrivateRoute from "./components/JS/PrivateRoute"
 function App() {
-  const user=useUser();
+  //const user=useUser();
   const fb = useFirebaseApp();
   return (
     <>
@@ -36,7 +34,9 @@ function App() {
       <Nav className="mr-auto">
         <Nav.Link href="/home">Inicio</Nav.Link>
         <Nav.Link>Buscar</Nav.Link>
-        <Nav.Link href="/profile">Mi perfil</Nav.Link>
+        <AuthCheck>
+          <Nav.Link href="/chat">Chat</Nav.Link>
+        </AuthCheck>
       </Nav>
       <AuthCheck fallback={
         <ButtonGroup>
@@ -45,7 +45,8 @@ function App() {
         </ButtonGroup>
       }>
         <ButtonGroup>
-          <Button onClick = {() => fb.auth().signOut()}>Terminar Sesion</Button>
+          <Button href="/profile" variant="outline-info">Mi perfil</Button>
+          <Button onClick = {() => fb.auth().signOut()} variant="danger">Terminar Sesion</Button>
         </ButtonGroup>
       </AuthCheck>
       
@@ -58,6 +59,7 @@ function App() {
         <Route path="/login" component={Login}/>
         <Route path="/register" component={Register} />
         <PrivateRoute path="/profile" component={Profile} />
+        <Route path="/chat" component={Chat}/>
         {/*<Route path="/search" component={}/>*/}
       </Switch> 
     </Router>
