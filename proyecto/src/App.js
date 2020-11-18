@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,6 +10,7 @@ import Login from "./components/JS/login";
 import Register from "./components/JS/register";
 import Profile from "./components/JS/perfil";
 import Chat from "./components/JS/chat";
+import Search from "./components/JS/search"
 import { 
   Nav,
   Navbar,
@@ -18,13 +19,15 @@ import {
  } from "react-bootstrap";
 import {
   useFirebaseApp,
-  AuthCheck
+  AuthCheck,
+  useUser
 } from 'reactfire';
 import {AuthProvider} from "./components/JS/Auth";
 import PrivateRoute from "./components/JS/PrivateRoute"
 function App() {
-  //const user=useUser();
+  const user=useUser();
   const fb = useFirebaseApp();
+  //console.log(user)
   return (
     <>
     <AuthProvider>
@@ -33,7 +36,7 @@ function App() {
       <Navbar.Brand href="/home">PYMEcta</Navbar.Brand>
       <Nav className="mr-auto">
         <Nav.Link href="/home">Inicio</Nav.Link>
-        <Nav.Link>Buscar</Nav.Link>
+        <Nav.Link href="/search">Buscar</Nav.Link>
         <AuthCheck>
           <Nav.Link href="/chat">Chat</Nav.Link>
         </AuthCheck>
@@ -58,9 +61,9 @@ function App() {
         <Route path="/home" component={Index}/>
         <Route path="/login" component={Login}/>
         <Route path="/register" component={Register} />
-        <PrivateRoute path="/profile" component={Profile} />
-        <Route path="/chat" component={Chat}/>
-        {/*<Route path="/search" component={}/>*/}
+        <PrivateRoute path="/profile" component={() => <Profile User={fb.auth().currentUser}/>} />
+        <PrivateRoute path="/chat" component={Chat}/>
+        <Route path="/search" component={Search}/>
       </Switch> 
     </Router>
     </AuthProvider>

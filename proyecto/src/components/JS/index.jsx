@@ -12,7 +12,6 @@ import { AuthContext } from "./Auth";
 export default function Index() {
     const fb = useFirebaseApp();
     const user = fb.auth().currentUser;
-    console.log(user)
     const checkUser = () => {
         if(!(user === null)){
             return <h1>, {user.displayName}</h1>

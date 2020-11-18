@@ -6,7 +6,9 @@ import {
     Row,
     Container,
     Form,
-    Button
+    Button,
+    Toast,
+    Popover
 } from 'react-bootstrap' 
 //import ChatMessage from "./ChatMessage"
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -14,89 +16,9 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { initializeApp } from 'firebase';
 import {auth, db} from "../FB/firebaseConfig"
 import firebase from "firebase/app";
+import {Message} from 'react-chat-ui'
 
-/*export default function Chat() {
-    const fb = useFirebaseApp();
-    const auth = useAuthState();
-    const user = useUser();
-    const firestore = useFirestore();
-    const messageRef = firestore.collection("Messages");
-    const query = messageRef.orderBy("timestamp").limit(20);
-    const [messages] = useCollectionData(query, {idField : 'uid'});
-    let [text, setText] = useState("");
-    //const token = msg.getToken();
-    const [chats, setChats] = useState([])
-    const saveMessage = useCallback(async ev =>{
-        ev.preventDefault();
-        var aux = text
-        var ts = new window.Date();
-        setText("");
-        try{
-           await firestore
-           .collection("Messages")
-           .add({
-            uid: user.uid,
-            Message: aux,
-            timestamp: ts
-        });
-        } catch(error){
-            console.log(error);
-        }
-   })
-    console.log(messages)
-    function ChatMessage(props) {
-        const { text, uid, photoURL } = props.message;
-      
-        const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
-      
-        return (<>
-          <div className={`message ${messageClass}`}>
-            <img src={photoURL} />
-            <p>{text}</p>
-          </div>
-        </>)
-      }
-    return (
-        <>
-        <Container>
-            <Row>
-                <Col>
-                    <Card>
-                        <Card.Header>
-                            <h1>Chat</h1>
-                        </Card.Header>
-                        <Card.Body>
-                            {messages && messages.map(msg => {
-                                <ChatMessage key={msg.uid} message={msg}/>
-                            })}
-                        </Card.Body>
-                        <Card.Footer>
-                            <Form onSubmit={saveMessage}>
-                                <Row>
-                                    <Col sm={10}>
-                                        <Form.Control
-                                        type="text"
-                                        size="sm"
-                                        value = {text}
-                                        onChange = {(ev) => setText(ev.target.value)}>
-                                            
-                                        </Form.Control>
-                                        
-                                    </Col>
-                                    <Col sm={2}>
-                                        <Button size="sm" type="submit">Send</Button>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
-        </>
-    )
 
-}*/
 class Chat extends Component{
     
     constructor(){
@@ -144,24 +66,63 @@ class Chat extends Component{
     }
     updateMessage(e){
         this.setState({message: e.target.value});
-        console.log(this.state.message)
+        //console.log(this.state.message)
+    }
+    isValidURL(e){
+        //console.log(e)
+        try{
+            new URL(e.text);
+        }catch(_){
+            return  <p key={e.id}>{e.text}</p>
+        }
+    return <a key={e.id} href={new URL(e.text)} target = "_blank">{e.text}</a>
     }
     render() {
         const { messages } = this.state;
         const messagesList = messages.map(message => {
-        return <li key={message.id}>{message.user}: {message.text}</li>
+        if(message.user === firebase.auth().currentUser.displayName){
+            return(
+                <Row>
+                    <Col sm={{span:6, offset:9}}>
+                    <Card style={{ width: '18rem', height: '7rem' }}>
+                        <Card.Body>
+                        <h4 key={message.id}>{message.user}</h4>
+                            {this.isValidURL(message)}
+                        </Card.Body>
+                    </Card>
+                    </Col>
+                    <br></br>
+                </Row>
+            )
+        }else{
+            return(
+                <Row >
+                    <Col sm={{span:6, offset:0}}>
+                    <Card style={{ width: '18rem' , height: '7rem'}}>
+                        <Card.Body>
+                        <h4 key={message.id}>{message.user}</h4>
+                            {this.isValidURL(message)}
+                        </Card.Body>
+                    </Card>
+                    </Col>
+                    <br/>
+                </Row>
+            )
+        }
+        //return <li key={message.id}>{message.user}: {message.text}</li>
         })
         return(
-            <Container>
+            
+            <Container fluid>
                 <Row>
                     <Col>
-                        <Card>
+                        <Card >
                             <Card.Header><h1>Chat</h1></Card.Header>
-                            <Card.Body>{messagesList}</Card.Body>
+                            <Card.Body style={{overflow:'auto', height:'18rem', width:'auto'}}>{messagesList}</Card.Body>
                             <Card.Footer>
                                 <Form onSubmit={this.handleSubmit.bind(this)}>
                                     <Row>
-                                        <Col sm={8}>
+                                        <Col sm={10}>
                                             <Form.Control
                                             type="text"
                                             onChange={this.updateMessage.bind(this)}

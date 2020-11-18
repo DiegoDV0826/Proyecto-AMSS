@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap'
 import 'firebase/auth';
 import { Redirect } from "react-router";
-import { useFirebaseApp } from 'reactfire'
+import { useFirebaseApp, useFirestore, useDatabase } from 'reactfire'
 import { AuthContext } from "./Auth"
 import * as firebase from 'firebase';
 
@@ -17,6 +17,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [passwd, setPasswd] = useState('');
     const fb = useFirebaseApp();
+    const db = useDatabase();
 
     const handleSubmit = useCallback(
         async(ev) => {
@@ -36,15 +37,21 @@ export default function Login() {
     const googleAuth = () => {
         fb.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then((res) => {
-            console.log(res.user);
+            //console.log(res.user);
         }).catch((err) => {
-            console.log(err);
+            //console.log(err);
         })
     }
 
     const { currentUser } = useContext(AuthContext);
-    
     if (currentUser){
+        var usAux = {
+            name: currentUser.displayName,
+            email: currentUser.email,
+            photo: currentUser.photoURL,
+            id: currentUser.uid 
+        }
+        db.ref(`users/${currentUser.uid}`).set(usAux);
         return <Redirect to="/"/>
     }
 
