@@ -135,18 +135,12 @@ class Search extends React.Component{
         var list = []
         firebase.database().ref("users/").on("value", snap => {
             const currUser = snap.val()
-            //console.log(currUser)
             if(currUser !== null){
                 this.setState({
                     users: currUser
                 })
-                var indexes = []
-                for(var u in currUser){
-                    indexes.push(u)
-                }
             }
         })
-        //console.log(list)
         this.setState({users:list})
     }
     
@@ -163,7 +157,6 @@ class Search extends React.Component{
                             <h4>{user.name}</h4>
                             <h4>{user.email}</h4>
                         </Card.Body>
-                        {/*<Button as={Link} to={`profile/${user.id}`}>Ver</Button>*/}
                     </Card>
                 </Col>
             )

@@ -25,7 +25,6 @@ import {
 import {AuthProvider} from "./components/JS/Auth";
 import PrivateRoute from "./components/JS/PrivateRoute"
 function App() {
-  const user=useUser();
   const fb = useFirebaseApp();
   //console.log(user)
   return (

@@ -12,7 +12,7 @@ import 'firebase/auth';
 import 'firebase/database'
 import { Redirect } from "react-router";
 import { AuthContext } from "./Auth"
-import { useFirebaseApp, useFirestore } from 'reactfire'
+import { useDatabase, useFirebaseApp, useFirestore } from 'reactfire'
 //import firebase from '../FB/firebaseConfig.js'
 
 export default function Register() {
@@ -20,7 +20,7 @@ export default function Register() {
     const [passwd, setPasswd] = useState('');
     const [nomNegocio, setNomNegocio] = useState('');
     const firebase = useFirebaseApp();
-    const db = useFirestore();
+    const db = useDatabase();
     
     const handleSubmit = useCallback(async ev =>{
          //let aux = {correo:email, nombre:nomNegocio};

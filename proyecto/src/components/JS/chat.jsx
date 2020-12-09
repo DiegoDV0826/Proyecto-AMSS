@@ -73,20 +73,20 @@ class Chat extends Component{
         try{
             new URL(e.text);
         }catch(_){
-            return  <p key={e.id}>{e.text}</p>
+            return  <p>{e.text}</p>
         }
-    return <a key={e.id} href={new URL(e.text)} target = "_blank">{e.text}</a>
+    return <a href={new URL(e.text)} target = "_blank">{e.text}</a>
     }
     render() {
         const { messages } = this.state;
         const messagesList = messages.map(message => {
         if(message.user === firebase.auth().currentUser.displayName){
             return(
-                <Row>
+                <Row key={message.id} size={"lg"}>
                     <Col sm={{span:6, offset:9}}>
                     <Card style={{ width: '18rem', height: '7rem' }}>
                         <Card.Body>
-                        <h4 key={message.id}>{message.user}</h4>
+                        <h5 >{message.user}</h5>
                             {this.isValidURL(message)}
                         </Card.Body>
                     </Card>
@@ -96,11 +96,11 @@ class Chat extends Component{
             )
         }else{
             return(
-                <Row >
+                <Row key={message.id} size={"lg"}>
                     <Col sm={{span:6, offset:0}}>
-                    <Card style={{ width: '18rem' , height: '7rem'}}>
+                    <Card style={{ width: '18rem' , height: '9rem'}}>
                         <Card.Body>
-                        <h4 key={message.id}>{message.user}</h4>
+                        <h5 >{message.user}</h5>
                             {this.isValidURL(message)}
                         </Card.Body>
                     </Card>
@@ -109,11 +109,10 @@ class Chat extends Component{
                 </Row>
             )
         }
-        //return <li key={message.id}>{message.user}: {message.text}</li>
         })
         return(
             
-            <Container fluid>
+            <Container>
                 <Row>
                     <Col>
                         <Card >
